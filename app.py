@@ -1,5 +1,6 @@
 # Task5  | Reviewed by Hassan Azam
 # In inverse decorator, dictionary can be used instead of multiple if statements
+# Usage of try catch block is good
 
 
 from flask import Flask, request, jsonify
