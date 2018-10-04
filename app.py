@@ -1,3 +1,7 @@
+# Task5  | Reviewed by Hassan Azam
+# In inverse decorator, dictionary can be used instead of multiple if statements
+
+
 from flask import Flask, request, jsonify
 from functools import wraps
 app = Flask(__name__)
