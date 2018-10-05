@@ -1,6 +1,13 @@
 from flask import Flask, request, jsonify
 from functools import wraps
+from pymongo import MongoClient
+
 app = Flask(__name__)
+
+myclient = MongoClient("mongodb://localhost:27017/")
+
+mydb = myclient["mydatabase"]
+mycol = mydb["calculations"]
 
 @app.route('/')
 def hello():
@@ -51,8 +58,12 @@ def allowedOperation(op):
         return True
     return False
 
+def getDB():
+    for x in mycol.find():
+        print(x)
+
+
 @app.route('/calc', methods=['POST'])
-@inverse
 def calc():
 
     data = request.get_json()
@@ -71,6 +82,12 @@ def calc():
         result = arithmaticOperation(op1, op2, op)
         response = { 'status': 200,
                      'result': result }
+
+        mydict = { "op": op, "op1": op1, "op2": op2, "result": result }
+        x = mycol.insert_one(mydict)
+        print ("{} inserted successfully\n" .format(x))
+        getDB()
+
         return jsonify(response)
 
         
