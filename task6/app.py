@@ -59,8 +59,13 @@ def allowedOperation(op):
     return False
 
 def getDB():
-    for x in mycol.find():
-        print(x)
+    docs = []
+    docs.append("total_records: {}" .format(mycol.count()))
+    print ("Count is {}" .format(mycol.count()))
+    for x in mycol.find({},{ "_id": 0}):
+        docs.append(x)
+    print (docs)
+    return docs
 
 
 @app.route('/calc', methods=['POST'])
@@ -85,8 +90,7 @@ def calc():
 
         mydict = { "op": op, "op1": op1, "op2": op2, "result": result }
         x = mycol.insert_one(mydict)
-        print ("{} inserted successfully\n" .format(x))
-        getDB()
+        print ("{} inserted successfully\n" .format(mydict))
 
         return jsonify(response)
 
@@ -96,6 +100,10 @@ def calc():
         response = { 'status': 500,
                      'message': 'Operator(op) or Operands(op1, op2) missing from the request' }
         return jsonify(response)
+
+@app.route('/calculations', methods=['GET'])
+def calculations():
+    return jsonify(getDB())
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
